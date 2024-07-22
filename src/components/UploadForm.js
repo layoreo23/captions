@@ -1,23 +1,43 @@
 'use client';
 import UploadIcon from "@/components/uploadIcon";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 export default function UploadForm(){
+    const [isUploading , setIsUploading] = useState(false);
+    const router = useRouter();
+
     async function upload(ev){
         ev.preventDefault();
         const files = ev.target.files; 
         if (files.length>0){
-            const file=files[0];  
+            const file = files[0];  
+            setIsUploading(true);
             const res = await axios.postForm('/api/upload', {
                 file,
             });
-            console.log(res.data);
+            setIsUploading(false);
+            const newName = res.data.newName;
+            router.push('/'+ newName);
         }
       }
       
-    return(     
-    <label className="bg-custom-pink py-4 px-4 rounded-full inline-flex gap-2 border border-white cursor-pointer">
-        <UploadIcon/>
-        <span>Choose File</span>
-        <input onChange={upload} type="file" className="hidden" />
-      </label>);
+    return(  
+    <>
+        {isUploading && (
+            <div className="bg-black/80 text-white fixed inset-0 flex items-center">
+                <div className="w-full text-center">
+                    <h2 className="text-4xl mb-4">Uploading...</h2>
+                    <h3 className="text-xl">Please wait</h3>
+                </div>
+                
+            </div>
+        )}
+        <label className="bg-custom-pink py-4 px-4 rounded-full inline-flex gap-2 border border-white cursor-pointer">
+            <UploadIcon/>
+            <span>Choose File</span>
+            <input onChange={upload} type="file" className="hidden"/>
+        </label>
+    </>   
+    );
 }
