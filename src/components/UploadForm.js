@@ -1,5 +1,5 @@
 'use client';
-import UploadIcon from "./uploadIcon";
+import UploadIcon from "@/components/uploadIcon";
 import axios from "axios";
 export default function UploadForm(){
     async function upload(ev){
@@ -7,8 +7,7 @@ export default function UploadForm(){
         const files = ev.target.files; 
         if (files.length>0){
             const file=files[0];  
-             
-            const res = await axios.postForm('/api/upload',{
+            const res = await axios.postForm('/api/upload', {
                 file,
             });
             console.log(res.data);
