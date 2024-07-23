@@ -14,9 +14,9 @@ module.exports = {
           // 'custom-gradient': 'linear-gradient(to bottom, #ba5370, #f4e2d8)',
       },
       colors:{
-        'bg-gradient-from': '#BA5370',
-        'bg-gradient-to': '#F4E2D8',
-        'custom-pink': '#BA5370',
+        'bg-gradient-from': '#4b6469',
+        'bg-gradient-to': '#708871',
+        'custom-pink': '#1a3636',
       }
     },
   },
