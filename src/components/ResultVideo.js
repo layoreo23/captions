@@ -4,7 +4,7 @@ export default function ResultVideo({filename}) {
     return (
     <>
          <div className="mb-4">
-                        <button className="bg-custom-pink py-4 px-4 rounded-full inline-flex gap-2 
+                        <button className="bg-custom-color py-4 px-4 rounded-full inline-flex gap-2 
                         border border-white cursor-pointer mb-4">
                             <SparkleIcon/>
                             <span>Apply Captions</span>

@@ -16,7 +16,7 @@ module.exports = {
       colors:{
         'bg-gradient-from': '#4b6469',
         'bg-gradient-to': '#708871',
-        'custom-pink': '#1a3636',
+        'custom-color': '#1a3636',
       }
     },
   },

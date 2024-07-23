@@ -1,13 +1,15 @@
-
 export default function TranscriptionItem({
    item,
    handleStartTimeChange,
    handleEndTimeChange,
-   handleContentChange}){
-
-    return(
-    <div className="my-1 grid grid-cols-3 gap-1 items-center"> 
-        <input type="text" 
+   handleContentChange,
+}){
+   if (!item){
+      return '';
+   }
+   return(
+      <div className="my-1 grid grid-cols-3 gap-1 items-center"> 
+         <input type="text" 
             className="bg-white/10 p-1 rounded-md"
             value={item.start_time}
             onChange={handleStartTimeChange}
@@ -22,6 +24,6 @@ export default function TranscriptionItem({
             value={item.content}
             onChange={ev => item.content=ev.target.value}
          />
-    </div>  
-    );
+      </div>  
+   );
 }

@@ -1,11 +1,9 @@
 'use client';
 import ResultVideo from "@/components/ResultVideo";
-import SparkleIcon from "@/components/sparkleIcon";
-import TranscriptionItem from "@/components/TranscriptionItem";
+import TranscriptionEditor from "@/components/TranscriptionEditor";
 import { clearTranscriptionItems } from "@/libs/awsTranscriptionHelpers";
-import { TranscriptionJobStatus } from "@aws-sdk/client-transcribe";
 import axios from "axios";
-import { useEffect,useState } from "react";
+import {useEffect, useState } from "react";
 
 
 export default function FilePage({params}){
@@ -52,28 +50,9 @@ export default function FilePage({params}){
             <div className="grid grid-cols-2 gap-9">
                 <div className="">
                     <h2 className="text-2xl mb-4 text-white/70 ">Transcription</h2>
-                    <div className="grid grid-cols-3 sticky top-0 bg-custom-pink/90 p-2 rounded-md">
-                        <div>From</div>
-                        <div>End</div>
-                        <div>Caption</div>
-                    </div>
-                    {awsTranscriptionItems.length>0 && (
-                        <div>
-                            {awsTranscriptionItems.map((item,key)=>(
-                                <div>
-                        <TranscriptionItem
-                        handleStartTimeChange={(env)=>{
-                            setAwsTranscriptionItems(
-                                [...awsTranscriptionItems]
-                            );
-                        }}
-                        handleEndTimeChange={(ev)=>{}}
-                        handleContentChange={(ev)=>{}}
-                        item={item} />
-                        </div>
-                    ))}
-                        </div>
-                    )}
+                    <TranscriptionEditor 
+                    awsTranscriptionItems={awsTranscriptionItems}
+                    setAwsTranscriptionItems={setAwsTranscriptionItems}/>
                 </div>
                 <div>
                     <h2 className="text-2xl mb-4 text-white/70 ">Results</h2>
