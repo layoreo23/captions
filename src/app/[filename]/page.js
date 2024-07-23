@@ -1,4 +1,6 @@
 'use client';
+import ResultVideo from "@/components/ResultVideo";
+import SparkleIcon from "@/components/sparkleIcon";
 import TranscriptionItem from "@/components/TranscriptionItem";
 import { clearTranscriptionItems } from "@/libs/awsTranscriptionHelpers";
 import { TranscriptionJobStatus } from "@aws-sdk/client-transcribe";
@@ -55,24 +57,29 @@ export default function FilePage({params}){
                         <div>End</div>
                         <div>Caption</div>
                     </div>
-                    {awsTranscriptionItems.length>0 && awsTranscriptionItems.map(item => (
-                    <TranscriptionItem item={item} />
+                    {awsTranscriptionItems.length>0 && (
+                        <div>
+                            {awsTranscriptionItems.map((item,key)=>(
+                                <div>
+                        <TranscriptionItem
+                        handleStartTimeChange={(env)=>{
+                            setAwsTranscriptionItems(
+                                [...awsTranscriptionItems]
+                            );
+                        }}
+                        handleEndTimeChange={(ev)=>{}}
+                        handleContentChange={(ev)=>{}}
+                        item={item} />
+                        </div>
                     ))}
+                        </div>
+                    )}
                 </div>
                 <div>
                     <h2 className="text-2xl mb-4 text-white/70 ">Results</h2>
-                    <div>
-                        <button>Put Captions</button>
+                    <ResultVideo filename={filename} />
                     </div>
-                    <video
-                        controls
-                     src={"https://aleena-captions.s3.amazonaws.com/"+ filename}>
-                    </video>
-                        
                 </div>
             </div>
-
-        
-        </div>
     );
 }
