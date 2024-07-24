@@ -1,10 +1,43 @@
+import { useEffect, useState, useRef } from "react";
+import { FFmpeg } from "@ffmpeg/ffmpeg";
 import SparkleIcon from "./sparkleIcon";
+import { fetchFile, toBlobURL } from "@ffmpeg/util";
+export default function ResultVideo({filename, transcriptionItems}) {
+    const videoUrl = "https://aleena-captions.s3.amazonaws.com/"+ filename;
+    const [loaded, setLoaded] = useState(false);
+    const ffmpegRef = useRef(new FFmpeg());
+    const videoRef = useRef(null);
+    useEffect(()=>{
+            videoRef.current.src = videoUrl;
+            load();
+    },[]);
 
-export default function ResultVideo({filename}) {
+
+    const load = async () => {
+        const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd'
+        const ffmpeg = ffmpegRef.current;
+        await ffmpeg.load({
+            coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+            wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+        });
+        setLoaded(true);
+    }
+
+    const transcode = async () => {
+        const ffmpeg = ffmpegRef.current;
+        await ffmpeg.writeFile(filename, await fetchFile(videoUrl));
+        await ffmpeg.exec(['-i', filename , 'output.mp4']);
+        const data = await ffmpeg.readFile('output.mp4');
+        videoRef.current.src =
+            URL.createObjectURL(new Blob([data.buffer], {type: 'video/mp4'}));
+    }
+
     return (
     <>
          <div className="mb-4">
-                        <button className="bg-custom-color py-4 px-4 rounded-full inline-flex gap-2 
+                        <button 
+                        onClick={transcode}
+                        className="bg-custom-color py-4 px-4 rounded-full inline-flex gap-2 
                         border border-white cursor-pointer mb-4">
                             <SparkleIcon/>
                             <span>Apply Captions</span>
@@ -12,10 +45,10 @@ export default function ResultVideo({filename}) {
                             </div>
                         <div className="rounded-xl overflow-hidden">
                             <video
-                            controls
-                            className="rounded-xl"
-                        src={"https://aleena-captions.s3.amazonaws.com/"+ filename}>
-                        </video>
+                                data-video = {0}
+                                ref ={videoRef}
+                                controls>
+                            </video>
             </div>
     </>
     );

@@ -17,7 +17,7 @@ export default function TranscriptionEditor({awsTranscriptionItems, setAwsTransc
             {awsTranscriptionItems.length>0 && (
             <div>
                 {awsTranscriptionItems.map((item,key)=>(
-                <div>
+                <div key={key}>
                     <TranscriptionItem
                     handleStartTimeChange={ev => updateTranscriptionItem(key, 'start_time',ev)}
                     handleEndTimeChange={ev => updateTranscriptionItem(key, 'end_time',ev)}
