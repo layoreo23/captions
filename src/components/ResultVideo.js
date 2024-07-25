@@ -2,6 +2,9 @@ import { useEffect, useState, useRef } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import SparkleIcon from "./sparkleIcon";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
+import transcriptionItemsToSrt from "@/libs/awsTranscriptionHelpers";
+
+
 export default function ResultVideo({filename, transcriptionItems}) {
     const videoUrl = "https://aleena-captions.s3.amazonaws.com/"+ filename;
     const [loaded, setLoaded] = useState(false);
@@ -25,8 +28,17 @@ export default function ResultVideo({filename, transcriptionItems}) {
 
     const transcode = async () => {
         const ffmpeg = ffmpegRef.current;
+        const srt = transcriptionItemsToSrt(transcriptionItems);
         await ffmpeg.writeFile(filename, await fetchFile(videoUrl));
-        await ffmpeg.exec(['-i', filename , 'output.mp4']);
+        await ffmpeg.writeFile('subs.srt', srt);
+        ffmpeg.on('log',({message})=>{
+            console.log(message);
+        });
+        await ffmpeg.exec([
+            '-i', 
+            filename ,
+            '-vf','subtitles = subs.srt',
+            'output.mp4']);
         const data = await ffmpeg.readFile('output.mp4');
         videoRef.current.src =
             URL.createObjectURL(new Blob([data.buffer], {type: 'video/mp4'}));

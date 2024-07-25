@@ -13,3 +13,28 @@ export function clearTranscriptionItems(items){
         return {start_time,end_time,content}
     });
 }
+
+function secondToHHMMSSMS(timeString){
+    const d=new Date(parseFloat(timeString)*1000);
+     return d.toISOString().slice(11,23).replace('.',',');
+}
+export default function transcriptionItemsToSrt(items){
+    let srt='';
+    let i=1;
+    items.forEach(item => {
+        //seq
+        srt+=i+"\n";
+        //timestamps
+        const {start_time,end_time}=item;
+        srt+=secondToHHMMSSMS(start_time)
+        + ' --> '
+        + secondToHHMMSSMS(end_time)+"\n";
+
+
+        //content
+        srt+=item.content+"\n";
+        srt+="\n";
+        i++;
+    });
+    return srt;
+}
