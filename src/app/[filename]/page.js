@@ -51,8 +51,8 @@ export default function FilePage({params}){
                 <div className="">
                     <h2 className="text-2xl mb-4 text-white/70 ">Transcription</h2>
                     <TranscriptionEditor 
-                    awsTranscriptionItems={awsTranscriptionItems}
-                    setAwsTranscriptionItems={setAwsTranscriptionItems}/>
+                        awsTranscriptionItems={awsTranscriptionItems}
+                        setAwsTranscriptionItems={setAwsTranscriptionItems}/>
                 </div>
                 <div>
                     <h2 className="text-2xl mb-4 text-white/70 ">Results</h2>

@@ -3,7 +3,9 @@ export default function TranscriptionEditor({awsTranscriptionItems, setAwsTransc
     
     function updateTranscriptionItem(index, prop, ev){
         const newAwsItems = [...awsTranscriptionItems];
-        newAwsItems[index][prop] = ev.target.value;
+        const newItem = {...newAwsItems[index]};
+        newItem[prop] = ev.target.value;
+        newAwsItems[index] = newItem;
         setAwsTranscriptionItems(newAwsItems);
     }
     
@@ -16,13 +18,13 @@ export default function TranscriptionEditor({awsTranscriptionItems, setAwsTransc
             </div>
             {awsTranscriptionItems.length>0 && (
             <div>
-                {awsTranscriptionItems.map((item,key)=>(
+                {awsTranscriptionItems.map((item, key)=>(
                 <div key={key}>
                     <TranscriptionItem
-                    handleStartTimeChange={ev => updateTranscriptionItem(key, 'start_time',ev)}
-                    handleEndTimeChange={ev => updateTranscriptionItem(key, 'end_time',ev)}
-                    handleContentChange={ev => updateTranscriptionItem(key, 'content',ev)}
-                    item={item} />
+                        handleStartTimeChange={ev => updateTranscriptionItem(key, 'start_time',ev)}
+                        handleEndTimeChange={ev => updateTranscriptionItem(key, 'end_time',ev)}
+                        handleContentChange={ev => updateTranscriptionItem(key, 'content',ev)}
+                        item={item}/>
                 </div>
                 ))}
             </div>

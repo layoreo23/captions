@@ -2,9 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import SparkleIcon from "./sparkleIcon";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
-import transcriptionItemsToSrt from "@/libs/awsTranscriptionHelpers";
+import { transcriptionItemsToSrt } from "@/libs/awsTranscriptionHelpers";
 import roboto from './../fonts/Roboto-Regular.ttf';
 import robotoBold from './../fonts/Roboto-Bold.ttf';
+import { resolve } from "styled-jsx/css";
 
 
 export default function ResultVideo({filename, transcriptionItems}) {
@@ -12,6 +13,7 @@ export default function ResultVideo({filename, transcriptionItems}) {
     const [loaded, setLoaded] = useState(false);
     const [primaryColour, setPrimaryColour] = useState('#FFFFFF');
     const [outlineColour, setOutlineColour] = useState('#000000');
+    const [progress, setProgress] = useState(1);
     const ffmpegRef = useRef(new FFmpeg());
     const videoRef = useRef(null);
     useEffect(()=>{
@@ -42,8 +44,21 @@ export default function ResultVideo({filename, transcriptionItems}) {
         const srt = transcriptionItemsToSrt(transcriptionItems);
         await ffmpeg.writeFile(filename, await fetchFile(videoUrl));
         await ffmpeg.writeFile('subs.srt', srt);
+        videoRef.current.src = videoUrl;
+        await new Promise((resolve, reject) => {
+            videoRef.current.onloadedmetadata = resolve;
+        });
+        
+        const duration = videoRef.current.duration;
         ffmpeg.on('log',({message})=>{
-            console.log(message);
+            const regexResult = /time=([0-9:.]+)/.exec(message);
+            if (regexResult && regexResult?.[1]){
+                const howMuchIsDone = regexResult?.[1];
+                const [hours, minutes, seconds] = howMuchIsDone.split(':'); 
+                const doneTotalSeconds = hours*3600 + minutes*60 +seconds;
+                const videoProgress = doneTotalSeconds/duration;
+                setProgress(videoProgress);
+            }
         });
         await ffmpeg.exec([
             '-i', filename ,
@@ -54,6 +69,7 @@ export default function ResultVideo({filename, transcriptionItems}) {
         const data = await ffmpeg.readFile('output.mp4');
         videoRef.current.src =
             URL.createObjectURL(new Blob([data.buffer], {type: 'video/mp4'}));
+        setProgress(1);
     }
 
     return (
@@ -80,8 +96,20 @@ export default function ResultVideo({filename, transcriptionItems}) {
                 value={outlineColour} 
                 onChange={ev => setOutlineColour(ev.target.value)}/>
         </div>
-        <div className="rounded-xl overflow-hidden">
+        <div className="rounded-xl overflow-hidden relative">
+            {progress && progress < 1 && (
+                <div className="absolute inset-0 bg-black/80 flex items-center">
+                    <div className="w-full text-center">
+                        <div className="bg-bg-gradient-from/50 mx-8 rounded-lg overflow-hidden relative">
+                            <div className="bg-bg-gradient-from h-8 " style={{width:progress*100 + '%'}}>
+                                <h3 className="text-white text-xl absolute inset-0 py-1">{parseInt(progress * 100)}%</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            )}
             <video
+                className="rounded-xl w-full"
                 data-video = {0}
                 ref ={videoRef}
                 controls>
