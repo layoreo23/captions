@@ -84,15 +84,15 @@ export default function ResultVideo({filename, transcriptionItems}) {
             </button>
         </div>
         <div>
-            primary color:
-            <input 
+            primary color: 
+            <input
                 type="color" 
                 value={primaryColour} 
                 onChange={ev => setPrimaryColour(ev.target.value)}/>
             <br />
-            outline color:
+            outline color: 
             <input 
-                type="color"   
+                type="color" 
                 value={outlineColour} 
                 onChange={ev => setOutlineColour(ev.target.value)}/>
         </div>
@@ -109,7 +109,7 @@ export default function ResultVideo({filename, transcriptionItems}) {
                 </div> 
             )}
             <video
-                className="rounded-xl w-full"
+                className="rounded-xl w-full mt-4"
                 data-video = {0}
                 ref ={videoRef}
                 controls>

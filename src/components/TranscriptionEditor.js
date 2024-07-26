@@ -17,7 +17,7 @@ export default function TranscriptionEditor({awsTranscriptionItems, setAwsTransc
                 <div>Caption</div>
             </div>
             {awsTranscriptionItems.length>0 && (
-            <div>
+            <div className="h-64 sm:h-auto overflow-y-scroll sm:overflow-auto">
                 {awsTranscriptionItems.map((item, key)=>(
                 <div key={key}>
                     <TranscriptionItem

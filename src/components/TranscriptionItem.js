@@ -17,12 +17,12 @@ export default function TranscriptionItem({
          <input type="text" 
             className="bg-white/10 p-1 rounded-md"
             value={item.end_time}
-            onChange={ev => item.end_time=ev.target.value}
+            onChange={handleEndTimeChange}
          />
          <input type="text" 
             className="bg-white/10 p-1 rounded-md"
             value={item.content}
-            onChange={ev => item.content=ev.target.value}
+            onChange={handleContentChange}
          />
       </div>  
    );
